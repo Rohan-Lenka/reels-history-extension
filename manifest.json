@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Instagram Reels Tracker",
+  "version": "1.0",
+  "description": "Tracks your viewed Instagram reels and saves them to your account.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://www.instagram.com/*"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Reels Tracker"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.instagram.com/*"
+      ],
+      "js": [
+        "popup.js",
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

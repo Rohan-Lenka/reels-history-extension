@@ -1,7 +1,23 @@
+async function getCurrentTab() {
+  let queryOptions = { active: true, lastFocusedWindow: true };
+  let [tab] = await chrome.tabs.query(queryOptions);
+  return tab;
+}
+
+async function setClientEmail(tab, email) {
+  await chrome.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: (email) => {
+      window.localStorage.setItem("reels-history-extension-client-email", email);
+    },
+    args: [email]
+  });
+}
+
 const button = document.getElementById("submit-button");
 const input = document.getElementById("email-input");
 const existingEmailDiv = document.getElementById("existing-email-div");
-const clientEmail = window.localStorage.getItem("client-email");
+const clientEmail = window.localStorage.getItem("reels-history-extension-client-email");
 
 if (clientEmail != null) {
   button.innerText = "Change email";
@@ -9,17 +25,20 @@ if (clientEmail != null) {
   existingEmailDiv.innerText = `Email in use: ${clientEmail}`;
 }
 
-button.addEventListener("click", (e) => {
+button.addEventListener("click", async (e) => {
   e.preventDefault();
+  const currentTab = await getCurrentTab();
+  if (currentTab.title !== "Instagram") {
+    alert("Please open the extension in instagram.com and then register your email");
+    return;
+  }
   const email = input.value.trim();
   if (email === "") {
     window.alert("Please enter your email");
     return;
   }
-  chrome.storage.local.set({ key: email }).then(() => {
-    console.log("Value is set");
-  });
-  window.localStorage.setItem("client-email", email);
+  await setClientEmail(currentTab, email);
+  window.localStorage.setItem("reels-history-extension-client-email", email);
   input.value = "";
-  existingEmailDiv.innerText = email;
+  existingEmailDiv.innerText = `Email in use: ${email}`;
 });

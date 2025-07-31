@@ -26,7 +26,7 @@ function main() {
       const currentUrl = window.location.href;
       if (previousUrl != currentUrl && instagramReelRegex.test(currentUrl)) {
         const now = Now();
-        await fetch("http://localhost:3000/api/reel", {
+        await fetch("https://reels-history.vercel.app/api/reel", {
           method: "POST",
           body: JSON.stringify({
             email: clientEmail,
@@ -35,7 +35,6 @@ function main() {
             time: now.time,
           }),
         });
-        // console.log(currentUrl + " -> " + now.date + " & " + now.time); // for debugging
         previousUrl = currentUrl;
       }
     } catch (error) {

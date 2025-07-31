@@ -28,7 +28,7 @@ if (clientEmail != null) {
 button.addEventListener("click", async (e) => {
   e.preventDefault();
   const currentTab = await getCurrentTab();
-  if (currentTab.title !== "Instagram") {
+  if (currentTab.url !== "https://www.instagram.com/") {
     alert("Please open the extension in instagram.com and then register your email");
     return;
   }
